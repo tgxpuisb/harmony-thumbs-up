@@ -102,3 +102,6 @@ ENV/
 
 # other
 .idea
+
+# password
+/app/app/config.py

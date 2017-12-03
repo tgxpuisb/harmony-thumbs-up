@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import pymysql
-
+from .config import password, host, root, database
 
 
 class AppPipeline(object):
 
     def __init__(self):
-        self.db = pymysql.connect('localhost', 'root', 'assassin12', 'github')
+        self.db = pymysql.connect(host, root, password, database)
         self.cursor = self.db.cursor()
 
     def process_item(self, item, spider):
@@ -37,5 +37,5 @@ class AppPipeline(object):
                 print(update_sql)
                 self.cursor.execute(update_sql)
                 self.db.commit()
-        pass
+
 
