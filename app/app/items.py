@@ -25,6 +25,7 @@ class UserItem(scrapy.Item):
     forks = scrapy.Field()
     following = scrapy.Field()
     create_time = scrapy.Field()
+    pid = scrapy.Field()
     pass
 
 

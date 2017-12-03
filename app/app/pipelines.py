@@ -1,19 +1,24 @@
 # -*- coding: utf-8 -*-
 import pymysql
-from .config import password, host, root, database
+from .config import password, host, user, database
 
 
 class AppPipeline(object):
 
     def __init__(self):
-        self.db = pymysql.connect(host, root, password, database)
+        self.db = pymysql.connect(host, user, password, database)
         self.cursor = self.db.cursor()
 
     def process_item(self, item, spider):
 
         if spider.name == 'project':
             self.handle_project(item)
+        elif spider.name == 'project_to_user':
+            self.handle_project2user(item)
         return item
+
+    def close_spider(self, spider):
+        self.db.close()
 
     def handle_project(self, item):
         if item['name']:
@@ -37,5 +42,11 @@ class AppPipeline(object):
                 print(update_sql)
                 self.cursor.execute(update_sql)
                 self.db.commit()
+
+    def handle_project2user(self, item):
+        if item['name']:
+            # todo 写入数据库
+        print(item)
+
 
 
