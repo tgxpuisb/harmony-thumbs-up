@@ -63,11 +63,11 @@ class projectToUserSpider(scrapy.Spider):
         if next_url:
             yield scrapy.Request(url=next_url, callback=self.parse)
         else:
-            pass
-            # project = self.get_one_project()
-            # if project:
-            #     self.pid = project[0]
-            # yield scrapy.Request(url=self.base_url + project[1] + '/stargazers', callback=self.parse)
+            project = self.get_one_project()
+            print(project)
+            if project:
+                self.pid = project[0]
+                yield scrapy.Request(url=self.base_url + project[1] + '/stargazers', callback=self.parse)
 
     def closed(self, reason):
         self.db.close()

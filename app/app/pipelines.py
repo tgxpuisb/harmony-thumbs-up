@@ -45,8 +45,30 @@ class AppPipeline(object):
 
     def handle_project2user(self, item):
         if item['name']:
-            # todo 写入数据库
-        print(item)
+            select_sql = "SELECT * FROM user WHERE `name` = '%s'" % (item['name'])
+            self.cursor.execute(select_sql)
+            results = self.cursor.fetchall()
+            if len(results) == 0:
+                insert_sql = "INSERT INTO user (`name`, create_time) VALUES \
+                ('%s', %s)" % (item['name'], item['create_time'])
+                self.cursor.execute(insert_sql)
+                uid = int(self.cursor.lastrowid)
+                self.db.commit()
+            else:
+                uid = results[0][0]
+            self.insert_user_star_project(uid, item['pid'])
+
+        # print(item)
+
+    def insert_user_star_project(self, uid, pid):
+        if uid and pid:
+            select_u2p_sql = "SELECT * FROM user_star_project WHERE uid = %s AND pid = %s" % (uid, pid)
+            self.cursor.execute(select_u2p_sql)
+            results = self.cursor.fetchall()
+            if len(results) == 0:
+                insert_sql = "INSERT INTO user_star_project (uid, pid) VALUES ('%s', '%s')" % (uid, pid)
+                self.cursor.execute(insert_sql)
+                self.db.commit()
 
 
 
