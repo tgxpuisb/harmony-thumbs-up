@@ -45,7 +45,7 @@ class projectToUserSpider(scrapy.Spider):
 
         for sel in response.xpath('//div[@id="repos"]/ol/li[@class="follow-list-item float-left border-bottom"]'):
             user_item = UserItem()
-            user_item['name'] = sel.xpath('div[2]/h3/span/a/text()').extract_first()
+            user_item['name'] = sel.xpath('div[2]/h3/span/a/@href').extract_first().replace('/', '')
             info = sel.xpath('div[2]/p/text()').extract_first().strip()
             if info:
                 info = info.replace('Joined on ', '')
