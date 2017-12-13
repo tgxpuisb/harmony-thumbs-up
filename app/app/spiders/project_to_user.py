@@ -7,7 +7,7 @@ from app.items import UserItem
 import time
 
 
-class projectToUserSpider(scrapy.Spider):
+class ProjectToUserSpider(scrapy.Spider):
     name = 'project_to_user'
     base_url = 'https://github.com/'
     allowed_domains = ['github.com']
