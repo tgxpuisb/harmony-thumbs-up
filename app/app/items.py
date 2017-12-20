@@ -19,13 +19,15 @@ class ProjectItem(scrapy.Item):
 
 
 class UserItem(scrapy.Item):
+    id = scrapy.Field()
     name = scrapy.Field()
     stars = scrapy.Field()
     follows = scrapy.Field()
     forks = scrapy.Field()
     following = scrapy.Field()
     create_time = scrapy.Field()
-    pid = scrapy.Field()
+    # pid = scrapy.Field()
+    repositories = scrapy.Field()
     pass
 
 

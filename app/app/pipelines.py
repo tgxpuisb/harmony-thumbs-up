@@ -15,6 +15,8 @@ class AppPipeline(object):
             self.handle_project(item)
         elif spider.name == 'project_to_user':
             self.handle_project2user(item)
+        elif spider.name == 'user_detail':
+            self.handle_user_detail(item)
         return item
 
     def close_spider(self, spider):
@@ -70,5 +72,11 @@ class AppPipeline(object):
                 self.cursor.execute(insert_sql)
                 self.db.commit()
 
+    def handle_user_detail(self, item):
+        if item:
+            update_sql = "UPDATE `user` SET repositories=%s, stars=%s, follows=%s, following=%s WHERE id=%s" \
+                         % (item['repositories'], item['stars'], item['follows'], item['following'], item['id'])
+            self.cursor.execute(update_sql)
+            self.db.commit()
 
 
