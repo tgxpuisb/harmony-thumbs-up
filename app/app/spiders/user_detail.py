@@ -13,7 +13,8 @@ class UserDetail(scrapy.Spider):
     start_urls = []
     user_count = 0
     page_size = 1
-    page = 1
+    page = 937
+    handle_httpstatus_list = [404, 500, 503]
 
     uid = 0
 
@@ -36,6 +37,8 @@ class UserDetail(scrapy.Spider):
             select_sql = "SELECT * FROM `user` LIMIT %s,%s" % (start_row, self.page_size)
             self.cursor.execute(select_sql)
             self.page += 1
+            print('page:')
+            print(self.page)
             user = self.cursor.fetchone()
             return user
         else:
@@ -49,14 +52,18 @@ class UserDetail(scrapy.Spider):
             else:
                 return num
 
-        user_item = UserItem()
-        user_item['id'] = self.uid
-        count_nodes = response.xpath('//span[@class="Counter"]/text()')
-        user_item['repositories'] = k2num(count_nodes[0].extract().strip())
-        user_item['stars'] = k2num(count_nodes[1].extract().strip())
-        user_item['follows'] = k2num(count_nodes[2].extract().strip())
-        user_item['following'] = k2num(count_nodes[3].extract().strip())
-        yield user_item
+        if response.status in self.handle_httpstatus_list:
+            print('404')
+        else:
+            user_item = UserItem()
+            user_item['id'] = self.uid
+            count_nodes = response.xpath('//span[@class="Counter"]/text()')
+            if count_nodes and len(count_nodes) == 4:
+                user_item['repositories'] = k2num(count_nodes[0].extract().strip())
+                user_item['stars'] = k2num(count_nodes[1].extract().strip())
+                user_item['follows'] = k2num(count_nodes[2].extract().strip())
+                user_item['following'] = k2num(count_nodes[3].extract().strip())
+            yield user_item
 
         user = self.get_one_user()
         if user:
